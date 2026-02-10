@@ -67,6 +67,37 @@ export async function fetchVehicles() {
   return { data: data.map(normalizeVehicle), error };
 }
 
+/** Fetch vehicle models grouped by name with available count */
+export async function fetchVehicleModels() {
+  const { data, error } = await supabase
+    .from("vehicles")
+    .select("*")
+    .eq("status", "available")
+    .order("name", { ascending: true });
+
+  if (error || !data || data.length === 0) {
+    return { data: FALLBACK_VEHICLES.map(normalizeVehicle), error: null };
+  }
+
+  // Group by vehicle name and count available units
+  const modelMap = new Map();
+  data.forEach((vehicle) => {
+    if (!modelMap.has(vehicle.name)) {
+      modelMap.set(vehicle.name, {
+        ...normalizeVehicle(vehicle),
+        availableCount: 1,
+        // Use first vehicle's id as representative
+        modelId: vehicle.id,
+      });
+    } else {
+      const existing = modelMap.get(vehicle.name);
+      existing.availableCount += 1;
+    }
+  });
+
+  return { data: Array.from(modelMap.values()), error: null };
+}
+
 /** Fetch single vehicle by id */
 export async function fetchVehicleById(id) {
   // Try Supabase first

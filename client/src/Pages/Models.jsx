@@ -17,7 +17,7 @@ import {
   Filter
 } from "lucide-react";
 import CarDetailModal from "../components/default/CarDetailModal";
-import { fetchVehicles } from "../lib/vehicles";
+import { fetchVehicleModels } from "../lib/vehicles";
 
 /* =====================================================
    App Constants
@@ -35,19 +35,19 @@ const FILTER_DEFAULTS = Object.freeze({
 });
 
 const CATEGORY_OPTIONS = Object.freeze([
-  "\u0e17\u0e31\u0e49\u0e07\u0e2b\u0e21\u0e14",
-  "\u0e40\u0e01\u0e4b\u0e07",
-  "\u0e2d\u0e35\u0e42\u0e04",
+  "ทั้งหมด",
+  "เก๋ง",
+  "อีโค",
   "SUV",
-  "\u0e01\u0e23\u0e30\u0e1a\u0e30",
+  "กระบะ",
 ]);
 
 const FUEL_OPTIONS = Object.freeze([
-  "\u0e17\u0e31\u0e49\u0e07\u0e2b\u0e21\u0e14",
-  "\u0e40\u0e1a\u0e19\u0e0b\u0e34\u0e19",
-  "\u0e14\u0e35\u0e40\u0e0b\u0e25",
-  "\u0e44\u0e2e\u0e1a\u0e23\u0e34\u0e14",
-  "\u0e44\u0e1f\u0e1f\u0e49\u0e32",
+  "ทั้งหมด",
+  "เบนซิน",
+  "ดีเซล",
+  "ไฮบริด",
+  "ไฟฟ้า",
 ]);
 
 const SORT_OPTIONS = Object.freeze({
@@ -69,7 +69,7 @@ const normalize = (value = "") => value.toLowerCase().trim();
 const safeIncludes = (source, target) =>
   normalize(source).includes(normalize(target));
 
-const isAll = (value) => value === "\u0e17\u0e31\u0e49\u0e07\u0e2b\u0e21\u0e14";
+const isAll = (value) => value === "ทั้งหมด";
 
 const byCategory = (car, category) =>
   isAll(category) || car.category === category;
@@ -188,10 +188,10 @@ const EmptyState = () => (
   <div className="text-center mt-20 py-12">
     <div className="text-5xl mb-4">🚗</div>
     <p className="text-gray-600 dark:text-zinc-400 text-lg">
-      \u0e44\u0e21\u0e48\u0e1e\u0e1a\u0e23\u0e16\u0e17\u0e35\u0e48\u0e15\u0e23\u0e07\u0e01\u0e31\u0e1a\u0e15\u0e31\u0e27\u0e01\u0e23\u0e2d\u0e07\u0e02\u0e2d\u0e07\u0e04\u0e38\u0e13
+      ไม่มีรถที่ตรงกับการค้นหาของคุณ
     </p>
     <p className="text-gray-500 dark:text-zinc-500 text-sm mt-2">
-      \u0e25\u0e2d\u0e07\u0e1b\u0e23\u0e31\u0e1a\u0e40\u0e07\u0e37\u0e48\u0e2d\u0e19\u0e44\u0e02\u0e01\u0e32\u0e23\u0e04\u0e49\u0e19\u0e2b\u0e32\u0e14\u0e39
+      ลองล้างตัวกรองหรือเปลี่ยนคำค้นหา
     </p>
   </div>
 );
@@ -223,7 +223,7 @@ const Models = () => {
     let cancelled = false;
     (async () => {
       setIsLoading(true);
-      const { data } = await fetchVehicles();
+      const { data } = await fetchVehicleModels();
       if (!cancelled) {
         setCars(data);
         setIsLoading(false);
@@ -292,10 +292,10 @@ const handleSort = useCallback((e) => {
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl md:text-5xl font-bold mb-4"
           >
-            \u0e23\u0e16\u0e40\u0e0a\u0e48\u0e32\u0e02\u0e2d\u0e07<span className="text-pink-500">\u0e40\u0e23\u0e32</span>
+            รถเช่าของ<span className="text-pink-500">เรา</span>
           </motion.h1>
           <p className="text-gray-600 dark:text-zinc-400">
-            \u0e40\u0e25\u0e37\u0e2d\u0e01\u0e23\u0e16\u0e17\u0e35\u0e48\u0e40\u0e2b\u0e21\u0e32\u0e30\u0e01\u0e31\u0e1a\u0e04\u0e38\u0e13 \u0e23\u0e16\u0e43\u0e2b\u0e21\u0e48 \u0e2a\u0e30\u0e2d\u0e32\u0e14 \u0e1b\u0e25\u0e2d\u0e14\u0e20\u0e31\u0e22 \u0e1e\u0e23\u0e49\u0e2d\u0e21\u0e1b\u0e23\u0e30\u0e01\u0e31\u0e19\u0e0a\u0e31\u0e49\u0e19 1
+            เลือกรถที่เหมาะกับคุณ รถใหม่ สะอาด ปลอดภัย พร้อมประกันชั้น 1
           </p>
         </div>
 
@@ -310,7 +310,7 @@ const handleSort = useCallback((e) => {
                 <input
                   value={searchTerm}
                   onChange={handleSearch}
-                  placeholder="\u0e04\u0e49\u0e19\u0e2b\u0e32\u0e15\u0e32\u0e21\u0e0a\u0e37\u0e48\u0e2d, \u0e1b\u0e23\u0e30\u0e40\u0e20\u0e17, \u0e40\u0e0a\u0e37\u0e49\u0e2d\u0e40\u0e1e\u0e25\u0e34\u0e07, \u0e17\u0e35\u0e48\u0e19\u0e31\u0e48\u0e07..."
+                  placeholder="ค้นหาตามชื่อ, ประเภท, เชื้อเพลิง, ที่นั่ง..."
                   className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-zinc-900 border rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none transition"
                 />
               </div>
@@ -319,7 +319,7 @@ const handleSort = useCallback((e) => {
               <div>
                 <label className="text-sm flex items-center gap-2 mb-1 text-gray-600 dark:text-zinc-400">
                   <Filter className="w-4 h-4" />
-                  \u0e23\u0e32\u0e04\u0e32\u0e2a\u0e39\u0e07\u0e2a\u0e38\u0e14 (\u0e3f{maxPrice})
+                  ราคาสูงสุด (฿{maxPrice})
                 </label>
                 <input
                   type="range"
@@ -354,9 +354,9 @@ const handleSort = useCallback((e) => {
                 onChange={handleSort}
                 className="p-3 rounded-xl bg-gray-50 dark:bg-zinc-900 border focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none transition"
               >
-                <option value={SORT_OPTIONS.NONE}>\u0e40\u0e23\u0e35\u0e22\u0e07\u0e15\u0e32\u0e21</option>
-                <option value={SORT_OPTIONS.PRICE_ASC}>\u0e23\u0e32\u0e04\u0e32: \u0e15\u0e48\u0e33 → \u0e2a\u0e39\u0e07</option>
-                <option value={SORT_OPTIONS.PRICE_DESC}>\u0e23\u0e32\u0e04\u0e32: \u0e2a\u0e39\u0e07 → \u0e15\u0e48\u0e33</option>
+                <option value={SORT_OPTIONS.NONE}>เรียงตาม</option>
+                <option value={SORT_OPTIONS.PRICE_ASC}>ราคา: ต่ำ → สูง</option>
+                <option value={SORT_OPTIONS.PRICE_DESC}>ราคา: สูง → ต่ำ</option>
               </select>
             </div>
 
@@ -373,7 +373,7 @@ const handleSort = useCallback((e) => {
             }}
             className="text-sm px-4 py-2 rounded-lg border border-gray-300 dark:border-zinc-700 hover:bg-gray-100 dark:hover:bg-zinc-800 transition"
           >
-            \u0e25\u0e49\u0e32\u0e07\u0e15\u0e31\u0e27\u0e01\u0e23\u0e2d\u0e07
+            ล้างตัวกรอง
           </button>
         </div>
 
@@ -430,6 +430,11 @@ const handleSort = useCallback((e) => {
                     <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
                     <span className="text-sm font-bold">{car.rating}</span>
                   </div>
+                  {car.availableCount && (
+                    <div className="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full flex items-center gap-1">
+                      <span className="text-xs font-bold">มี {car.availableCount} คันพร้อม</span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="p-6">
@@ -444,20 +449,20 @@ const handleSort = useCallback((e) => {
                     </div>
                     <div className="text-right">
                       <p className="text-2xl font-bold text-pink-500">
-                        \u0e3f{car.price}
+                        ฿{car.price}
                       </p>
-                      <p className="text-xs text-gray-400 dark:text-zinc-500">\u0e15\u0e48\u0e2d\u0e27\u0e31\u0e19</p>
+                      <p className="text-xs text-gray-400 dark:text-zinc-500">ต่อวัน</p>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-3 gap-2 mb-6 text-xs text-gray-500 dark:text-zinc-400">
                     <FeatureItem
                       icon={Users}
-                      label={`${car.features.seats} \u0e17\u0e35\u0e48\u0e19\u0e31\u0e48\u0e07`}
+                      label={`${car.features.seats} ที่นั่ง`}
                     />
                     <FeatureItem
                       icon={Briefcase}
-                      label={`${car.features.luggage} \u0e01\u0e23\u0e30\u0e40\u0e1b\u0e4b\u0e32`}
+                      label={`${car.features.luggage} กระเป๋า`}
                     />
                     <FeatureItem
                       icon={Fuel}
@@ -469,7 +474,7 @@ const handleSort = useCallback((e) => {
                     to={`/booking/${car.id}`}
                     className="flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-xl font-bold hover:from-pink-600 hover:to-pink-700 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
                   >
-                    \u0e08\u0e2d\u0e07\u0e40\u0e25\u0e22 <ChevronRight className="w-5 h-5" />
+                    จองเลย <ChevronRight className="w-5 h-5" />
                   </Link>
                 </div>
               </motion.div>
@@ -489,7 +494,7 @@ const handleSort = useCallback((e) => {
             animate={{ opacity: 1 }}
             className="text-center mt-12 text-sm text-gray-500 dark:text-zinc-400"
           >
-            \u0e41\u0e2a\u0e14\u0e07 {filteredCars.length} \u0e04\u0e31\u0e19
+            แสดง {filteredCars.length} คัน
           </motion.div>
         )}
       </div>
