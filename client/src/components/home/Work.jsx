@@ -199,32 +199,32 @@ const Work = () => {
   const steps = [
     {
       icon: Car,
-      title: "Select Your Car",
+      title: "เลือกรถของคุณ",
       description:
-        "Choose from our wide range of premium vehicles for any occasion",
+        "เลือกจากรถยนต์คุณภาพหลากหลายรุ่นสำหรับทุกโอกาส",
       bgcolor: "bg-blue-50 dark:bg-blue-900/20",
       iconcolor: "text-blue-500",
     },
     {
       icon: MapPin,
-      title: "Pick-up Location",
+      title: "สถานที่รับรถ",
       description:
-        "Select from our numerous convenient pick-up and drop-off locations",
+        "เลือกจากจุดรับและคืนรถที่สะดวกมากมาย",
       bgcolor: "bg-green-50 dark:bg-green-900/20",
       iconcolor: "text-green-500",
     },
     {
       icon: Calendar,
-      title: "Pick-up Date",
+      title: "วันที่รับรถ",
       description:
-        "Choose your rental duration and preferred pick-up timing",
+        "เลือกระยะเวลาเช่าและเวลารับรถที่คุณต้องการ",
       bgcolor: "bg-purple-50 dark:bg-purple-900/20",
       iconcolor: "text-purple-500",
     },
     {
       icon: CreditCard,
-      title: "Make Payment",
-      description: "Quick and secure payment with multiple payment options",
+      title: "ชำระเงิน",
+      description: "ชำระเงินรวดเร็วและปลอดภัยด้วยหลายช่องทาง",
       bgcolor: "bg-pink-50 dark:bg-pink-900/20",
       iconcolor: "text-pink-500",
     },

@@ -43,13 +43,13 @@ const Navbar = () => {
   const isLinkActive = (path) => location.pathname === path;
 
   const navItems = [
-    { path: "/", label: "\u0e2b\u0e19\u0e49\u0e32\u0e41\u0e23\u0e01" },
-    { path: "/about", label: "\u0e40\u0e01\u0e35\u0e48\u0e22\u0e27\u0e01\u0e31\u0e1a\u0e40\u0e23\u0e32" },
-    { path: "/models", label: "\u0e23\u0e16\u0e40\u0e0a\u0e48\u0e32" },
-    { path: "/testimonials", label: "\u0e23\u0e35\u0e27\u0e34\u0e27" },
-    { path: "/team", label: "\u0e17\u0e35\u0e21\u0e07\u0e32\u0e19" },
-    { path: "/contact", label: "\u0e15\u0e34\u0e14\u0e15\u0e48\u0e2d" },
-    { path: "/guide", label: "\u0e04\u0e39\u0e48\u0e21\u0e37\u0e2d\u0e01\u0e32\u0e23\u0e43\u0e0a\u0e49\u0e07\u0e32\u0e19" },
+    { path: "/", label: "หน้าแรก" },
+    { path: "/about", label: "เกี่ยวกับเรา" },
+    { path: "/models", label: "รถเช่า" },
+    { path: "/testimonials", label: "รีวิว" },
+    { path: "/team", label: "ทีมงาน" },
+    { path: "/contact", label: "ติดต่อ" },
+    { path: "/guide", label: "คู่มือการใช้งาน" },
 
   ];
 
@@ -121,7 +121,7 @@ const Navbar = () => {
   className="px-4 py-2 border border-red-500 text-red-500
              rounded-lg hover:bg-red-500 hover:text-white
              transition-all font-medium">
-   \u0e41\u0e2a\u0e14\u0e07\u0e04\u0e27\u0e32\u0e21\u0e04\u0e34\u0e14\u0e40\u0e2b\u0e47\u0e19
+   แสดงความคิดเห็น
 </button>
 
               {user ? (
@@ -132,7 +132,7 @@ const Navbar = () => {
                     onClick={() => setDropdownOpen(!dropdownOpen)}
                     className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-lg hover:shadow-lg hover:shadow-pink-500/30 transition-all border border-pink-400/20"
                   >
-                    <span>\u0e1a\u0e31\u0e0d\u0e0a\u0e35</span>
+                    <span>บัญชี</span>
                     <ChevronDown
                       className={`w-4 h-4 transition-transform ${
                         dropdownOpen ? "rotate-180" : ""
@@ -153,14 +153,14 @@ const Navbar = () => {
                           className="w-full px-4 py-2 text-left text-gray-700 dark:text-zinc-300 hover:bg-pink-50 dark:hover:bg-zinc-800 hover:text-pink-500 transition-colors flex items-center space-x-2"
                         >
                           <User className="w-4 h-4" />
-                          <span>\u0e42\u0e1b\u0e23\u0e44\u0e1f\u0e25\u0e4c</span>
+                          <span>โปรไฟล์</span>
                         </button>
                         <button
                           onClick={handleLogout}
                           className="w-full px-4 py-2 text-left text-gray-700 dark:text-zinc-300 hover:bg-pink-50 dark:hover:bg-zinc-800 hover:text-pink-500 transition-colors flex items-center space-x-2"
                         >
                           <LogOut className="w-4 h-4" />
-                          <span>\u0e2d\u0e2d\u0e01\u0e08\u0e32\u0e01\u0e23\u0e30\u0e1a\u0e1a</span>
+                          <span>ออกจากระบบ</span>
                         </button>
                       </motion.div>
                     )}
@@ -175,7 +175,7 @@ const Navbar = () => {
                text-gray-700 dark:text-zinc-300 transition-all duration-300 font-medium hover:bg-gray-100 dark:hover:bg-white/5"
                     >
                       <LogIn className="w-4 h-4" />
-                      <span>\u0e40\u0e02\u0e49\u0e32\u0e2a\u0e39\u0e48\u0e23\u0e30\u0e1a\u0e1a</span>
+                      <span>เข้าสู่ระบบ</span>
                     </Link>
                   </motion.div>
 
@@ -184,7 +184,7 @@ const Navbar = () => {
                     className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-lg hover:shadow-lg hover:shadow-pink-500/30 transition-all transform hover:scale-105 border border-pink-400/20 font-medium"
                   >
                     <UserPlus className="w-4 h-4" />
-                    <span>\u0e2a\u0e21\u0e31\u0e04\u0e23\u0e2a\u0e21\u0e32\u0e0a\u0e34\u0e01</span>
+                    <span>สมัครสมาชิก</span>
                   </Link>
                 </>
               )}
@@ -231,8 +231,8 @@ const Navbar = () => {
                 ))}
                 {!user && (
                    <div className="flex flex-col gap-3 pt-4 border-t border-gray-100 dark:border-zinc-800">
-                     <Link to="/login" onClick={() => setIsOpen(false)} className="w-full py-3 rounded-xl bg-gray-100 dark:bg-zinc-800 text-gray-900 dark:text-white font-semibold">\u0e40\u0e02\u0e49\u0e32\u0e2a\u0e39\u0e48\u0e23\u0e30\u0e1a\u0e1a</Link>
-                     <Link to="/register" onClick={() => setIsOpen(false)} className="w-full py-3 rounded-xl bg-pink-500 text-white font-semibold shadow-lg shadow-pink-500/20">\u0e2a\u0e21\u0e31\u0e04\u0e23\u0e2a\u0e21\u0e32\u0e0a\u0e34\u0e01</Link>
+                     <Link to="/login" onClick={() => setIsOpen(false)} className="w-full py-3 rounded-xl bg-gray-100 dark:bg-zinc-800 text-gray-900 dark:text-white font-semibold">เข้าสู่ระบบ</Link>
+                     <Link to="/register" onClick={() => setIsOpen(false)} className="w-full py-3 rounded-xl bg-pink-500 text-white font-semibold shadow-lg shadow-pink-500/20">สมัครสมาชิก</Link>
                    </div>
                 )}
               </div>

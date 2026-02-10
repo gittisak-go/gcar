@@ -4,7 +4,7 @@ import Footer from "../components/default/Footer";
 
 export const MainLayout = () => {
   return (
-    <div className="min-h-screen bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100 transition-colors duration-300">
+    <div className="min-h-screen bg-black text-white transition-colors duration-300">
       <Navbar />
       <main>
         <Outlet />

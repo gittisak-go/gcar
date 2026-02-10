@@ -17,8 +17,7 @@ export async function createReservation({
   vehicleId,
   pickupDate,
   dropoffDate,
-  pickupLocation,
-  serviceType = "self_drive",
+  location,
   notes = "",
 }) {
   const {
@@ -34,8 +33,7 @@ export async function createReservation({
       vehicle_id: vehicleId,
       pickup_date: pickupDate,
       dropoff_date: dropoffDate,
-      pickup_location: pickupLocation,
-      service_type: serviceType,
+      location,
       notes,
       status: "pending",
     })

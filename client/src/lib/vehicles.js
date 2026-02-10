@@ -30,20 +30,29 @@ const FALLBACK_VEHICLES = [
 
 /* =====================================================
    Normalize — maps Supabase row → UI-friendly shape
+   Updated for V2 schema (car_models + vehicles)
 ===================================================== */
 export function normalizeVehicle(v) {
+  // V2 structure: model data joined with vehicle data
+  const model = v.car_models || v;
+  
   return {
     id: v.id,
-    name: v.name,
-    category: v.category,
-    price: Number(v.price_per_day),
-    image: v.image_url || DEFAULT_IMAGES[v.name] || "https://placehold.co/600x400?text=Car",
-    rating: Number(v.rating) || 0,
-    status: v.status,
+    modelId: v.model_id || model.id,
+    name: model.name,
+    brand: model.brand,
+    category: model.category,
+    price: Number(model.price_per_day),
+    image: model.image_url || DEFAULT_IMAGES[model.name] || "https://placehold.co/600x400?text=Car",
+    rating: Number(model.rating) || 0,
+    status: v.status || 'available',
+    vehicleNumber: v.vehicle_number,
+    licensePlate: v.license_plate,
     features: {
-      seats: String(v.seats ?? 5),
-      luggage: String(v.features?.luggage ?? 0),
-      fuel: v.fuel_type || "เบนซิน",
+      seats: String(model.seats ?? 5),
+      luggage: String(model.features?.luggage ?? 0),
+      fuel: model.fuel_type || "เบนซิน",
+      transmission: model.transmission || "Automatic",
     },
   };
 }
@@ -56,7 +65,22 @@ export function normalizeVehicle(v) {
 export async function fetchVehicles() {
   const { data, error } = await supabase
     .from("vehicles")
-    .select("*")
+    .select(`
+      *,
+      car_models (
+        id,
+        name,
+        brand,
+        category,
+        price_per_day,
+        seats,
+        fuel_type,
+        transmission,
+        image_url,
+        features,
+        rating
+      )
+    `)
     .eq("status", "available")
     .order("created_at", { ascending: false });
 
@@ -69,29 +93,39 @@ export async function fetchVehicles() {
 
 /** Fetch vehicle models grouped by name with available count */
 export async function fetchVehicleModels() {
-  const { data, error } = await supabase
-    .from("vehicles")
-    .select("*")
-    .eq("status", "available")
-    .order("name", { ascending: true });
+  const { data: models, error } = await supabase
+    .from("car_models")
+    .select(`
+      *,
+      vehicles!inner (
+        id,
+        status
+      )
+    `)
+    .eq("vehicles.status", "available");
 
-  if (error || !data || data.length === 0) {
+  if (error || !models || models.length === 0) {
     return { data: FALLBACK_VEHICLES.map(normalizeVehicle), error: null };
   }
 
-  // Group by vehicle name and count available units
+  // Group by model and count available vehicles
   const modelMap = new Map();
-  data.forEach((vehicle) => {
-    if (!modelMap.has(vehicle.name)) {
-      modelMap.set(vehicle.name, {
-        ...normalizeVehicle(vehicle),
-        availableCount: 1,
-        // Use first vehicle's id as representative
-        modelId: vehicle.id,
+  
+  models.forEach((model) => {
+    if (!modelMap.has(model.id)) {
+      // Create a virtual vehicle object for normalization
+      const virtualVehicle = {
+        id: model.vehicles[0]?.id || model.id,
+        model_id: model.id,
+        status: 'available',
+        car_models: model,
+      };
+      
+      modelMap.set(model.id, {
+        ...normalizeVehicle(virtualVehicle),
+        modelId: model.id,
+        availableCount: model.vehicles.length,
       });
-    } else {
-      const existing = modelMap.get(vehicle.name);
-      existing.availableCount += 1;
     }
   });
 
@@ -100,10 +134,26 @@ export async function fetchVehicleModels() {
 
 /** Fetch single vehicle by id */
 export async function fetchVehicleById(id) {
-  // Try Supabase first
+  // Try Supabase first - join with car_models
   const { data, error } = await supabase
     .from("vehicles")
-    .select("*")
+    .select(`
+      *,
+      car_models (
+        id,
+        name,
+        brand,
+        category,
+        price_per_day,
+        seats,
+        fuel_type,
+        transmission,
+        image_url,
+        features,
+        rating,
+        description
+      )
+    `)
     .eq("id", id)
     .single();
 
@@ -116,13 +166,64 @@ export async function fetchVehicleById(id) {
   return { data: normalizeVehicle(data), error };
 }
 
+/** Fetch available vehicles by model ID */
+export async function fetchAvailableVehiclesByModel(modelId) {
+  const { data, error } = await supabase
+    .from("vehicles")
+    .select(`
+      *,
+      car_models (
+        id,
+        name,
+        brand,
+        category,
+        price_per_day,
+        seats,
+        fuel_type,
+        transmission,
+        image_url,
+        features,
+        rating
+      )
+    `)
+    .eq("model_id", modelId)
+    .eq("status", "available")
+    .order("vehicle_number", { ascending: true });
+
+  if (error || !data || data.length === 0) {
+    return { data: [], error };
+  }
+  return { data: data.map(normalizeVehicle), error };
+}
+
 /** Filter vehicles by category */
 export async function fetchVehiclesByCategory(category) {
-  let q = supabase.from("vehicles").select("*").eq("status", "available");
+  let q = supabase
+    .from("vehicles")
+    .select(`
+      *,
+      car_models (
+        id,
+        name,
+        brand,
+        category,
+        price_per_day,
+        seats,
+        fuel_type,
+        transmission,
+        image_url,
+        features,
+        rating
+      )
+    `)
+    .eq("status", "available");
+    
   if (category && category !== "ทั้งหมด" && category !== "All") {
-    q = q.eq("category", category);
+    q = q.eq("car_models.category", category);
   }
-  const { data, error } = await q.order("price_per_day", { ascending: true });
+  
+  const { data, error } = await q.order("created_at", { ascending: false });
+  
   if (error || !data || data.length === 0) {
     let fallback = FALLBACK_VEHICLES;
     if (category && category !== "ทั้งหมด" && category !== "All") {

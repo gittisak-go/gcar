@@ -12,38 +12,38 @@ import {
 const steps = [
   {
     icon: <Search className="w-8 h-8 text-pink-500" />,
-    title: "Browse Cars",
-    desc: "Explore available cars with detailed specs, pricing, and images.",
+    title: "ค้นหารถ",
+    desc: "เลือกดูรถที่มีพร้อมรายละเอียดสเปค ราคา และรูปภาพ",
   },
   {
     icon: <Car className="w-8 h-8 text-pink-500" />,
-    title: "Select a Car",
-    desc: "Choose the car that best fits your trip and budget.",
+    title: "เลือกรถ",
+    desc: "เลือกรถที่เหมาะกับการเดินทางและงบประมาณของคุณ",
   },
   {
     icon: <CalendarCheck className="w-8 h-8 text-pink-500" />,
-    title: "Book Instantly",
-    desc: "Book your car in just a few clicks with instant confirmation.",
+    title: "จองทันที",
+    desc: "จองรถของคุณได้เพียงไม่กี่คลิก พร้อมการยืนยันทันที",
   },
   {
     icon: <User className="w-8 h-8 text-pink-500" />,
-    title: "Manage Profile",
-    desc: "View bookings, update profile details, and manage your account.",
+    title: "จัดการโปรไฟล์",
+    desc: "ดูการจอง อัปเดตข้อมูลส่วนตัว และจัดการบัญชีของคุณ",
   },
 ];
 
 const features = [
   {
     icon: <ShieldCheck className="w-6 h-6 text-green-500" />,
-    text: "Secure authentication & data protection",
+    text: "การยืนยันตัวตนที่ปลอดภัยและการปกป้องข้อมูล",
   },
   {
     icon: <Star className="w-6 h-6 text-yellow-500" />,
-    text: "Ratings & testimonials from real users",
+    text: "คะแนนและรีวิวจากผู้ใช้งานจริง",
   },
   {
     icon: <Car className="w-6 h-6 text-blue-500" />,
-    text: "Wide range of vehicles for every need",
+    text: "รถหลากหลายประเภทสำหรับทุกความต้องการ",
   },
 ];
 
@@ -57,11 +57,10 @@ const UserGuide = () => {
         className="text-center max-w-3xl mx-auto mb-16"
       >
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
-          User Guide 🚗
+          คู่มือผู้ใช้ 🚗
         </h1>
         <p className="mt-4 text-gray-600 dark:text-zinc-400">
-          Learn how to use the Car Rental platform effectively and get the best
-          experience.
+          เรียนรู้วิธีใช้งานระบบรถเช่าอย่างมีประสิทธิภาพและรับประสบการณ์ที่ดีที่สุด
         </p>
       </motion.div>
 
@@ -91,7 +90,7 @@ const UserGuide = () => {
         className="max-w-4xl mx-auto bg-white dark:bg-zinc-900 rounded-2xl p-8 shadow-lg"
       >
         <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 text-center">
-          Key Features
+          คุณสมบัติหลัก
         </h2>
 
         <div className="space-y-4">

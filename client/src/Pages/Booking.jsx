@@ -373,7 +373,7 @@ const CarDetailPage = () => {
       vehicleId: selectedCar.id,
       pickupDate: rentalDetails.pickUpDate,
       dropoffDate: rentalDetails.dropOffDate,
-      pickupLocation: rentalDetails.location,
+      location: rentalDetails.location,
       // No total_price sent here as per new rules
     });
 
