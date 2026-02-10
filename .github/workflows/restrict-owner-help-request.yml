@@ -1,0 +1,42 @@
+name: Restrict Owner Help Request
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  restrict-owner-help-request:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check if issue is "Owner Help Request"
+        id: check_template
+        run: |
+          if [[ "${{ github.event.issue.title }}" == "HELP: "* ]]; then
+            echo "is_owner_help_request=true" >> $GITHUB_ENV
+          else
+            echo "is_owner_help_request=false" >> $GITHUB_ENV
+          fi
+
+      - name: Get issue creator
+        if: env.is_owner_help_request == 'true'
+        id: get_creator
+        run: echo "creator=${{ github.event.issue.user.login }}" >> $GITHUB_ENV
+
+      - name: Check if creator is owner
+        if: env.is_owner_help_request == 'true'
+        id: check_owner
+        run: |
+          OWNER=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }} | jq -r '.owner.login')
+          if [[ "${{ env.creator }}" == "$OWNER" ]]; then
+            echo "is_owner=true" >> $GITHUB_ENV
+          else
+            echo "is_owner=false" >> $GITHUB_ENV
+          fi
+
+      - name: Close issue if not created by owner
+        if: env.is_owner == 'false'
+        run: |
+          curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -d '{"state": "closed", "labels": ["invalid"], "body": "This issue template is restricted to repository owners only."}' \
+          https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}

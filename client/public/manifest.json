@@ -1,0 +1,68 @@
+{
+  "name": "รุ่งโรจน์คาร์เร้นท์ - รถเช่าอุดรธานี",
+  "short_name": "รุ่งโรจน์",
+  "description": "บริการรถเช่าอุดรธานี รถเช่าขับเอง และรถเช่าพร้อมคนขับ ฟรีประกันชั้น 1",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#ec4899",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "lang": "th",
+  "dir": "ltr",
+  "categories": ["travel", "transportation", "business"],
+  "icons": [
+    {
+      "src": "/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon-120x120.png",
+      "sizes": "120x120",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-mobile.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}
