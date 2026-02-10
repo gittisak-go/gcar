@@ -148,9 +148,18 @@ const Footer = () => {
                 <Mail className="w-5 h-5 text-pink-500 group-hover:scale-110 transition-transform" />
                 <span className="hover:text-pink-500 transition-colors">rungrojcarrental@gmail.com</span>
               </div>
-              <div className="flex items-center space-x-3">
-                <MapPin className="w-5 h-5 text-pink-500" />
-                <span>สาขาสนามบินอุดรธานี, ต.หมากแข้ง อ.เมือง จ.อุดรธานี 41000</span>
+              <div className="flex flex-col space-y-2">
+                <div className="flex items-center space-x-3">
+                  <MapPin className="w-5 h-5 text-pink-500" />
+                  <span className="font-semibold">สาขาหลัก — รถเช่าอุดรฯ</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <MapPin className="w-5 h-5 text-pink-500" />
+                  <span className="font-semibold">สาขาสนามบินอุดรธานี</span>
+                </div>
+                <div className="flex items-start space-x-3 ml-8">
+                  <span className="text-sm text-gray-500 dark:text-zinc-400">ต.หมากแข้ง อ.เมือง จ.อุดรธานี 41000</span>
+                </div>
               </div>
             </div>
           </motion.div>

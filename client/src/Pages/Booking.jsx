@@ -267,11 +267,19 @@ const CarDetailPage = () => {
     pickUpDate: "",
     dropOffDate: "",
     location: "",
+    branch: "", // สาขาที่เลือก
   });
   const [dateError, setDateError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [reservation, setReservation] = useState(null);
+
+  // ข้อมูลสาขา
+  const branches = [
+    { id: "main", name: "สาขาหลัก — รถเช่าอุดรฯ", location: "17.386613, 102.776114", address: "อุดรธานี" },
+    { id: "airport", name: "สนามบินอุดรธานี", location: "17.386613, 102.776114", address: "ต.หมากแข้ง อ.เมือง จ.อุดรธานี 41000" },
+    { id: "custom", name: "อื่นๆ (เลือกบนแผนที่)", location: null, address: null },
+  ];
 
   /* Fetch vehicle from Supabase */
   useEffect(() => {
@@ -400,9 +408,13 @@ const CarDetailPage = () => {
   };
 
   const isFormValid = () => {
+    const hasValidLocation = rentalDetails.branch === "custom" 
+      ? rentalDetails.location  // ถ้าเลือก "อื่นๆ" ต้องเลือกที่บนแผนที่
+      : rentalDetails.branch;   // ถ้าเลือกสาขา ถือว่ามี location แล้ว
+    
     return rentalDetails.pickUpDate && 
            rentalDetails.dropOffDate && 
-           rentalDetails.location && 
+           hasValidLocation && 
            !dateError;
   };
 
@@ -417,7 +429,7 @@ const CarDetailPage = () => {
         <PaymentModal
           onClose={() => {
             setShowPayment(false);
-            setRentalDetails({ pickUpDate: "", dropOffDate: "", location: "" });
+            setRentalDetails({ pickUpDate: "", dropOffDate: "", location: "", branch: "" });
             setDateError("");
           }}
           reservation={reservation}
@@ -523,12 +535,71 @@ const CarDetailPage = () => {
               </div>
             )}
 
-            <BookingMap
-              location={rentalDetails.location}
-              setLocation={(loc) =>
-                setRentalDetails({ ...rentalDetails, location: loc })
-              }
-            />
+            {/* สถานที่รับ-คืนรถ */}
+            <div className="space-y-3">
+              <label className="text-sm font-medium text-gray-600 dark:text-zinc-400">
+                สถานที่รับ-คืนรถเช่า
+              </label>
+              <div className="grid grid-cols-1 gap-3">
+                {branches.map((branch) => (
+                  <label
+                    key={branch.id}
+                    className={`relative flex items-start p-4 border-2 rounded-xl cursor-pointer transition-all ${
+                      rentalDetails.branch === branch.id
+                        ? 'border-pink-500 bg-pink-50 dark:bg-pink-900/20 shadow-md'
+                        : 'border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 hover:border-pink-300 dark:hover:border-pink-700'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="branch"
+                      value={branch.id}
+                      checked={rentalDetails.branch === branch.id}
+                      onChange={(e) => {
+                        const newBranch = e.target.value;
+                        const selectedBranch = branches.find(b => b.id === newBranch);
+                        setRentalDetails({
+                          ...rentalDetails,
+                          branch: newBranch,
+                          location: selectedBranch?.location || rentalDetails.location,
+                        });
+                      }}
+                      className="mt-1 w-4 h-4 text-pink-500 focus:ring-pink-500"
+                    />
+                    <div className="ml-3 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl">📍</span>
+                        <span className="font-semibold text-gray-900 dark:text-white">
+                          {branch.name}
+                        </span>
+                      </div>
+                      {branch.address && (
+                        <p className="mt-1 text-sm text-gray-500 dark:text-zinc-400">
+                          {branch.address}
+                        </p>
+                      )}
+                    </div>
+                    {rentalDetails.branch === branch.id && (
+                      <div className="absolute top-3 right-3 w-6 h-6 bg-pink-500 rounded-full flex items-center justify-center">
+                        <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    )}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* แผนที่ - แสดงเฉพาะเมื่อเลือก "อื่นๆ" */}
+            {rentalDetails.branch === "custom" && (
+              <BookingMap
+                location={rentalDetails.location}
+                setLocation={(loc) =>
+                  setRentalDetails({ ...rentalDetails, location: loc })
+                }
+              />
+            )}
 
             <button
               type="submit"
@@ -563,11 +634,25 @@ const CarDetailPage = () => {
                 </div>
                 <span>วันคืนรถ: {rentalDetails.dropOffDate ? formatDateForDisplay(rentalDetails.dropOffDate) : 'ยังไม่เลือก'} {dateError && <span className="text-red-500">- ไม่ถูกต้อง</span>}</span>
               </div>
-              <div className={`flex items-center gap-3 p-3 rounded-lg ${rentalDetails.location ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400' : 'bg-gray-50 dark:bg-zinc-800 text-gray-600 dark:text-zinc-400'}`}>
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center ${rentalDetails.location ? 'bg-green-500 text-white' : 'bg-gray-300 dark:bg-zinc-700'}`}>
-                  {rentalDetails.location ? '✓' : '○'}
+              <div className={`flex items-center gap-3 p-3 rounded-lg ${
+                (rentalDetails.branch && rentalDetails.branch !== 'custom') || (rentalDetails.branch === 'custom' && rentalDetails.location)
+                  ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400'
+                  : 'bg-gray-50 dark:bg-zinc-800 text-gray-600 dark:text-zinc-400'
+              }`}>
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                  (rentalDetails.branch && rentalDetails.branch !== 'custom') || (rentalDetails.branch === 'custom' && rentalDetails.location)
+                    ? 'bg-green-500 text-white'
+                    : 'bg-gray-300 dark:bg-zinc-700'
+                }`}>
+                  {(rentalDetails.branch && rentalDetails.branch !== 'custom') || (rentalDetails.branch === 'custom' && rentalDetails.location) ? '✓' : '○'}
                 </div>
-                <span>เลือกสถานที่แล้ว</span>
+                <span>สถานที่: {
+                  rentalDetails.branch
+                    ? rentalDetails.branch === 'custom'
+                      ? rentalDetails.location ? 'เลือกบนแผนที่แล้ว' : 'กรุณาเลือกบนแผนที่'
+                      : branches.find(b => b.id === rentalDetails.branch)?.name
+                    : 'ยังไม่เลือก'
+                }</span>
               </div>
             </div>
           </form>
